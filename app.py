@@ -1,13 +1,12 @@
 import gradio as gr 
- 
+from ia_core import preguntar_a_gemini  # <--- Importa la función real
+
 def obtener_respuesta_mock(consulta): 
-    """ 
-    Esta es una función de prueba. Finge ser la IA. 
-    Toma la consulta del usuario y devuelve una respuesta de ejemplo. 
-    """ 
-    print(f"La consulta del usuario fue: {consulta}") 
-    return f"Respuesta de prueba para la consulta: '{consulta}'. La IA real se conectará pronto. ¡Buen trabajo!" 
- 
+    """
+    Toma la consulta del usuario y devuelve una respuesta de ejemplo.
+    """
+    return preguntar_a_gemini(consulta)
+
 # --- Aquí se define la interfaz visual --- 
 with gr.Blocks(theme=gr.themes.Soft()) as app: 
     gr.Markdown( 
