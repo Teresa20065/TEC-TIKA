@@ -8,12 +8,20 @@ from typing_extensions import List, TypedDict
 from vector_str import vector_store
 from llm_setup import llm           
 from langchain_community.document_loaders import PyPDFLoader
+import os
+from langchain_community.document_loaders import TextLoader
 
-# Load and chunk contents of the PDF
-loader = PyPDFLoader("LEY GENERAL DE ADUANAS.pdf")
-docs = loader.load()
+folder_path = "."  # Reemplaza con el path de tu carpeta
+docs = []
 
-text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+for filename in os.listdir(folder_path):
+    if filename.endswith(".md"):
+        file_path = os.path.join(folder_path, filename)
+        loader = TextLoader(file_path, encoding="utf-8")
+        docs.extend(loader.load())
+
+
+text_splitter = RecursiveCharacterTextSplitter(chunk_size=4000, chunk_overlap=800)
 all_splits = text_splitter.split_documents(docs)
 
 # Index chunks
@@ -50,5 +58,5 @@ graph_builder = StateGraph(State).add_sequence([retrieve, generate])
 graph_builder.add_edge(START, "retrieve")
 graph = graph_builder.compile()
 
-response = graph.invoke({"question": "Cual es el articulo 11 de la Ley General de Aduanas?"})
+response = graph.invoke({"question": "Que es el RUEX y como lo obtengo en Santa Cruz?"})
 print(response["answer"])
