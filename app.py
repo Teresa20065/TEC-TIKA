@@ -1,13 +1,13 @@
 import gradio as gr
 import time
-from ia_core import preguntar_a_gemini
+# from ia_core import preguntar_a_gemini # solo usa gemini
+from rag_core import responder_rag # usa gemini con rag
 
-# Importar la función de IA para generar respuestas para el chatbot
 def obtener_respuesta_mock(consulta): 
     """
     Toma la consulta del usuario y devuelve una respuesta de ejemplo.
     """
-    return preguntar_a_gemini(consulta)
+    return responder_rag(consulta)
 
 def chatbot_response(message, history):
     # Verificar que hay un mensaje
@@ -15,24 +15,23 @@ def chatbot_response(message, history):
         return history, ""
     
     try:
-        # CAMBIO PRINCIPAL: Usar la función de IA en lugar de respuestas predefinidas
         response = obtener_respuesta_mock(message)
-        
-        # Si no hay respuesta de la IA, usar respuesta por defecto
         if not response:
             response = "Lo siento, no pude procesar tu consulta en este momento. ¿Podrías reformular tu pregunta sobre auriculares?"
-            
     except Exception as e:
-        # Manejo de errores si falla la IA
         print(f"Error al obtener respuesta de IA: {e}")
         response = "Disculpa, hubo un problema técnico. ¿Podrías intentar de nuevo?"
-    
-    # Simular tiempo de respuesta (opcional, puedes quitarlo si quieres respuestas más rápidas)
+
     time.sleep(1)
-    
-    # Añadir el mensaje del usuario y la respuesta del chatbot
-    history.append([message, response])
-    
+
+    # Inicializa history si es None
+    if history is None:
+        history = []
+
+    # Agrega los mensajes como diccionarios
+    history.append({"role": "user", "content": message})
+    history.append({"role": "assistant", "content": response})
+
     return history, ""
 
 # Función para manejar los botones de sugerencias
@@ -190,10 +189,9 @@ with gr.Blocks(css=custom_css, title="Headphones AI Assistant") as demo:
                 height=300,
                 show_label=False,
                 container=False,
-                bubble_full_width=False
+                type="messages"
             )
-            
-            # Input del chat
+            # Botón de enviar
             with gr.Row():
                 msg_input = gr.Textbox(
                     placeholder="I'm looking for...",

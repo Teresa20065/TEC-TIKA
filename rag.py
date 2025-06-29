@@ -58,5 +58,3 @@ graph_builder = StateGraph(State).add_sequence([retrieve, generate])
 graph_builder.add_edge(START, "retrieve")
 graph = graph_builder.compile()
 
-response = graph.invoke({"question": "Que es el RUEX y como lo obtengo en Santa Cruz?"})
-print(response["answer"])

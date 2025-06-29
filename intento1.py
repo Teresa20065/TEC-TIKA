@@ -1,70 +1,15 @@
 import gradio as gr
 import random
 import time
+from rag_core import responder_rag # usa gemini con rag
 
-def obtener_respuesta_mock(consulta):
+def obtener_respuesta_mock(consulta): 
     """
-    Esta es una función de prueba. Finge ser la IA.
     Toma la consulta del usuario y devuelve una respuesta de ejemplo.
     """
-    print(f"La consulta del usuario fue: {consulta}")
-    
-    # Simulamos un poco de tiempo de procesamiento
-    time.sleep(1)
-    
-    # Respuestas más elaboradas según el tipo de consulta
-    if "exportar" in consulta.lower() or "exportación" in consulta.lower():
-        return f"""
-## 🚀 **Respuesta del Experto en Exportaciones**
+    return responder_rag(consulta)
 
-### 📋 Para tu consulta: *"{consulta}"*
 
-**✅ Pasos principales para exportar:**
-1. **Registro como exportador** - Inscríbete en SUNAT
-2. **Clasificación arancelaria** - Determina la partida de tu producto
-3. **Documentos necesarios** - Factura comercial, packing list, certificados
-4. **Logística** - Elige tu método de envío y agente de carga
-
-**💡 Consejo especial:** Para PyMEs y artesanos, recomiendo comenzar con mercados vecinos como Ecuador o Colombia.
-
-**🎯 ¿Necesitas más detalles sobre algún paso específico?**
-        """
-    elif "arancel" in consulta.lower():
-        return f"""
-## 💰 **Información Arancelaria**
-
-### 📊 Consulta: *"{consulta}"*
-
-**🔍 Para determinar aranceles necesitas:**
-- Partida arancelaria específica (10 dígitos)
-- País de origen/destino
-- Valor FOB de la mercancía
-
-**📈 Rangos típicos:**
-- Materias primas: 0-6%
-- Productos manufacturados: 6-17%
-- Bienes de lujo: 17-20%
-
-**⚡ Tip:** Usa el NANDINA para clasificar correctamente tu producto.
-        """
-    else:
-        return f"""
-## 🤖 **Respuesta del Asistente Aduanero**
-
-### 💬 Has preguntado: *"{consulta}"*
-
-**🎯 Análisis de tu consulta:**
-Esta es una excelente pregunta sobre comercio internacional. Estoy procesando la información más actualizada para darte la mejor respuesta.
-
-**📚 Recursos recomendados:**
-- Portal SUNAT para trámites
-- SIICEX para oportunidades comerciales
-- PromPerú para apoyo exportador
-
-**✨ La IA real se conectará pronto con información más específica y actualizada.**
-
-*¡Gracias por usar nuestro asistente! 🌟*
-        """
 
 # CSS personalizado para hacer la interfaz más colorida y atractiva
 custom_css = """
@@ -235,11 +180,10 @@ with gr.Blocks(
             
             gr.Examples(
                 [
-                    "🔍 ¿Qué arancel tienen los paneles solares importados de China?",
-                    "🎨 Soy artesana, ¿cómo exporto mis productos por primera vez?",
-                    "🌱 ¿Qué certificaciones necesito para exportar productos orgánicos?",
-                    "📱 ¿Cuáles son los requisitos para exportar tecnología?",
-                    "🧶 ¿Cómo clasifico arancelariamente textiles de alpaca?"
+                    " ¿Qué información debe contener el Certificado de Origen de la Asociación Latinoamericana de Integración?",
+                    " ¿Cuáles son los pasos para obtener un certificado de origen para exportar productos?",
+                    " ¿Qué observaciones importantes debo considerar al llenar un certificado de origen?",
+                    " ¿Quién debe firmar y certificar el Certificado de Origen según la normativa?",
                 ],
                 inputs=pregunta_usuario
             )
